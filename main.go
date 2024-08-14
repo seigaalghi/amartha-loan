@@ -8,6 +8,7 @@ import (
 	"github.com/seigaalghi/amartha-loan/common/configs"
 	"github.com/seigaalghi/amartha-loan/common/middlewares"
 	"github.com/seigaalghi/amartha-loan/controllers"
+	"github.com/seigaalghi/amartha-loan/models"
 	"github.com/seigaalghi/amartha-loan/repository"
 	"github.com/seigaalghi/amartha-loan/services"
 
@@ -30,6 +31,8 @@ func main() {
 	if err != nil {
 		log.Fatal("Failed to connect to database: ", err)
 	}
+
+	db.AutoMigrate(&models.Investment{}, &models.Approval{}, &models.Disbursement{}, &models.Loan{})
 
 	loanRepo := repository.NewPostgresLoanRepository(db)
 	loanService := services.NewLoanService(loanRepo)

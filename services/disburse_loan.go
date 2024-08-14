@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/seigaalghi/amartha-loan/common/errs"
 	"github.com/seigaalghi/amartha-loan/models"
 )
@@ -22,5 +23,7 @@ func (s *LoanService) DisburseLoan(loanID string, disbursement models.Disburseme
 	if err != nil {
 		return errs.NewGeneralError(err)
 	}
+
+	disbursement.ID = uuid.New().String()
 	return s.repo.SaveDisbursement(disbursement)
 }

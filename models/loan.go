@@ -15,10 +15,10 @@ const (
 )
 
 type Loan struct {
-	ID              string    `json:"id"`
-	BorrowerID      string    `json:"borrower_id"`
-	PrincipalAmount float64   `json:"principal_amount"`
-	Rate            float64   `json:"rate"`
+	ID              string    `json:"id" gorm:"primaryKey"`
+	BorrowerID      string    `json:"borrower_id" binding:"required"`
+	PrincipalAmount float64   `json:"principal_amount" binding:"required"`
+	Rate            float64   `json:"rate" binding:"required"`
 	ROI             float64   `json:"roi"`
 	AgreementLink   string    `json:"agreement_link"`
 	State           LoanState `json:"state"`
@@ -27,20 +27,24 @@ type Loan struct {
 }
 
 type Approval struct {
+	ID           string    `json:"id" gorm:"primaryKey"`
 	LoanID       string    `json:"loan_id"`
-	ValidatorID  string    `json:"validator_id"`
-	ApprovalDate time.Time `json:"approval_date"`
-	ProofPicture string    `json:"proof_picture"`
+	ValidatorID  string    `json:"validator_id" binding:"required"`
+	ApprovalDate time.Time `json:"approval_date" binding:"required"`
+	ProofPicture string    `json:"proof_picture" binding:"required"`
 }
 
 type Investment struct {
+	ID         string    `json:"id" gorm:"primaryKey"`
 	LoanID     string    `json:"loan_id"`
-	InvestorID string    `json:"investor_id"`
-	Amount     float64   `json:"amount"`
+	InvestorID string    `json:"investor_id" binding:"required"`
+	Amount     float64   `json:"amount" binding:"required"`
 	InvestedAt time.Time `json:"invested_at"`
+	ROI        float64   `json:"roi"`
 }
 
 type Disbursement struct {
+	ID               string    `json:"id" gorm:"primaryKey"`
 	LoanID           string    `json:"loan_id"`
 	FieldOfficerID   string    `json:"field_officer_id"`
 	DisbursementDate time.Time `json:"disbursement_date"`

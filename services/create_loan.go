@@ -14,10 +14,14 @@ func (s *LoanService) CreateLoan(loan *models.Loan) error {
 	loan.CreatedAt = time.Now()
 	loan.UpdatedAt = time.Now()
 
+	loan.ROI = calculateROI(loan.PrincipalAmount, loan.Rate)
 	err := s.repo.CreateLoan(loan)
 	if err != nil {
 		return errs.NewGeneralError(err)
 	}
+
+	// upload pdf
+	// send email
 
 	return nil
 }

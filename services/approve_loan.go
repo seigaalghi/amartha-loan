@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/seigaalghi/amartha-loan/common/errs"
 	"github.com/seigaalghi/amartha-loan/models"
 )
@@ -22,5 +23,7 @@ func (s *LoanService) ApproveLoan(loanID string, approval models.Approval) error
 	if err != nil {
 		return errs.NewGeneralError(err)
 	}
+
+	approval.ID = uuid.New().String()
 	return s.repo.SaveApproval(approval)
 }

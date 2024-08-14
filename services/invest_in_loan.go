@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/seigaalghi/amartha-loan/common/errs"
 	"github.com/seigaalghi/amartha-loan/models"
 )
@@ -23,6 +24,11 @@ func (s *LoanService) InvestInLoan(loanID string, investment models.Investment) 
 	if totalInvested+investment.Amount > loan.PrincipalAmount {
 		return errs.NewCustomError(http.StatusBadRequest, "investment amount exceeds loan principal amount")
 	}
+
+	roi := calculateROI(investment.Amount, loan.Rate)
+	investment.ROI = roi
+	investment.LoanID = loanID
+	investment.ID = uuid.New().String()
 	err = s.repo.SaveInvestment(investment)
 	if err != nil {
 		return errs.NewGeneralError(err)
@@ -36,7 +42,13 @@ func (s *LoanService) InvestInLoan(loanID string, investment models.Investment) 
 		if err != nil {
 			return errs.NewGeneralError(err)
 		}
-		// Send email to investors
+		// upload pdf
+		// send email
 	}
+
 	return nil
+}
+
+func calculateROI(amount, interestRate float64) float64 {
+	return amount * (interestRate / 100)
 }
